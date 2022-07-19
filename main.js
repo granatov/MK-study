@@ -140,12 +140,6 @@ $randomBtn.addEventListener("click", function () {
   changeHp(player2);
 });
 
-// function playerLose(name) {
-//   const $loseTitle = createElement("div", "loseTitle");
-//   $loseTitle.innerText = name + " lose";
-//   return $loseTitle;
-// }
-
 function playerWin(name) {
   const $winTitle = createElement("div", "loseTitle");
   $winTitle.innerText = name + " win";
