@@ -122,27 +122,37 @@ function changeHp(player) {
 
   player.hp -= getRandomInt(1, 20);
   $playerLife.style.width = player.hp + "%";
+
   if (player.hp <= 0) {
-    if (player.name == player1.name) {
-      $arenas.appendChild(playerWin(player2.name));
-      $playerLife.style.width = 0 + "%";
-      $randomBtn.disabled = true;
-    } else if (player.name == player2.name) {
-      $arenas.appendChild(playerWin(player1.name));
-      $playerLife.style.width = 0 + "%";
-      $randomBtn.disabled = true;
-    }
+    player.hp = 0;
+    $playerLife.style.width = 0 + "%";
   }
 }
 
 $randomBtn.addEventListener("click", function () {
   changeHp(player1);
   changeHp(player2);
+
+  if (player1.hp === 0 || player2.hp === 0) {
+    $randomBtn.disabled = true;
+  }
+
+  if (player1.hp <= 0 && player1.hp < player2.hp) {
+    $arenas.appendChild(playerWin(player2.name));
+  } else if (player2.hp <= 0 && player2.hp < player1.hp) {
+    $arenas.appendChild(playerWin(player1.name));
+  } else if (player1.hp == 0 && player2.hp == 0) {
+    $arenas.appendChild(playerWin());
+  }
 });
 
 function playerWin(name) {
   const $winTitle = createElement("div", "loseTitle");
-  $winTitle.innerText = name + " win";
+  if (name) {
+    $winTitle.innerText = name + " win";
+  } else {
+    $winTitle.innerText = "drow";
+  }
   return $winTitle;
 }
 
