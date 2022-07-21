@@ -21,59 +21,6 @@ const player2 = {
   },
 };
 
-// const $arenas = document.querySelector(".arenas");
-
-// function createElement(tag, className) {
-//   const $tag = document.createElement(tag);
-
-//   if (className) {
-//     $tag.classList.add(className);
-//   }
-//   return $tag;
-// }
-
-// function createPlayer(player, name, hp) {
-//   const $player = createElement("div", player);
-//   const $progress = createElement("div", "progressbar");
-//   const $character = createElement("div", "character");
-//   const $life = createElement("div", "life");
-//   const $name = createElement("div", "name");
-//   const $img = createElement("img");
-//   const playerHp = hp + "%";
-
-//   $life.style.width = playerHp;
-//   $name.innerText = name;
-
-//   switch (name) {
-//     case "Scorpion":
-//       $img.src = "http://reactmarathon-api.herokuapp.com/assets/scorpion.gif";
-//       break;
-//     case "Subzero":
-//       $img.src = "http://reactmarathon-api.herokuapp.com/assets/subzero.gif";
-//       break;
-//     case "Kitana":
-//       $img.src = "http://reactmarathon-api.herokuapp.com/assets/kitana.gif";
-//       break;
-//     case "Liukang":
-//       $img.src = "http://reactmarathon-api.herokuapp.com/assets/liukang.gif";
-//       break;
-//     case "Sonya":
-//       $img.src = "http://reactmarathon-api.herokuapp.com/assets/sonya.gif";
-//       break;
-//   }
-
-//   $player.appendChild($character);
-//   $player.appendChild($progress);
-//   $progress.appendChild($life);
-//   $progress.appendChild($name);
-//   $character.appendChild($img);
-
-//   return $player;
-// }
-
-// $arenas.appendChild(createPlayer("player1", "Scorpion", 100));
-// $arenas.appendChild(createPlayer("player2", "Subzero", 100));
-
 const $arenas = document.querySelector(".arenas");
 const $randomBtn = document.querySelector(".button");
 
@@ -138,8 +85,10 @@ function playerWin(name) {
   const $winTitle = createElement("div", "loseTitle");
   if (name) {
     $winTitle.innerText = name + " win";
+    createReloadButton();
   } else {
     $winTitle.innerText = "drow";
+    createReloadButton();
   }
   return $winTitle;
 }
@@ -150,18 +99,34 @@ $randomBtn.addEventListener("click", function () {
   changeHp(player2);
 
   if (player1.hp === 0 || player2.hp === 0) {
-    //если ХП равно 0 у первого или второго игрока кнопка - отключается
+    // если ХП равно 0 у первого или второго игрока кнопка - отключается
     $randomBtn.disabled = true;
+    $randomBtn.style.opacity = "0";
+    $randomBtn.style.cursor = "default";
   }
 
-  if (player1.hp <= 0 && player1.hp < player2.hp) {  //если игрок1 имеет 0 ХП и его ХП меньше чем у игрока2
-    $arenas.appendChild(playerWin(player2.name));  // то имя победителя обьявляется игрока2
-  } else if (player2.hp <= 0 && player2.hp < player1.hp) {//если игрок2 имеет 0 ХП и его ХП меньше чем у игрока1
-    $arenas.appendChild(playerWin(player1.name));// то имя победителя обьявляется игрока1
-  } else if (player1.hp == 0 && player2.hp == 0) {//если у обоих игроков ХП = 0 =
-    $arenas.appendChild(playerWin());//то вызывается функция без передачи параметра (ничья)
+  if (player1.hp <= 0 && player1.hp < player2.hp) {
+    //если игрок1 имеет 0 ХП и его ХП меньше чем у игрока2
+    $arenas.appendChild(playerWin(player2.name)); // то имя победителя обьявляется игрока2
+  } else if (player2.hp <= 0 && player2.hp < player1.hp) {
+    //если игрок2 имеет 0 ХП и его ХП меньше чем у игрока1
+    $arenas.appendChild(playerWin(player1.name)); // то имя победителя обьявляется игрока1
+  } else if (player1.hp == 0 && player2.hp == 0) {
+    //если у обоих игроков ХП = 0 =
+    $arenas.appendChild(playerWin()); //то вызывается функция без передачи параметра (ничья)
   }
 });
+
+function createReloadButton() {
+  const $reloadWrap = createElement("div", "reloadWrap");
+  const $reloadBtn = createElement("button", "button");
+  $reloadBtn.innerText = "Restart";
+  $arenas.appendChild($reloadWrap);
+  $reloadWrap.appendChild($reloadBtn);
+  $reloadBtn.addEventListener("click", function () {
+    window.location.reload();
+  });
+}
 
 $arenas.appendChild(createPlayer2(player1));
 $arenas.appendChild(createPlayer2(player2));
