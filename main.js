@@ -9,6 +9,9 @@ const player1 = {
   attack: function (name) {
     console.log(this.name + " Fight...");
   },
+  changeHP: changeHP,
+  renderHP: renderHP,
+  elHp: elHp,
 };
 const player2 = {
   player: 2,
@@ -19,7 +22,17 @@ const player2 = {
   attack: function () {
     console.log(this.name + " Fight...");
   },
+  changeHP: changeHP,
+  renderHP: renderHP,
+  elHp: elHp,
 };
+
+function changeHP(damage) {
+  this.hp -= damage;
+  if (this.hp <= 0) {
+    this.hp = 0;
+  }
+}
 
 const $arenas = document.querySelector(".arenas");
 const $randomBtn = document.querySelector(".button");
@@ -56,35 +69,27 @@ function createPlayer2(obj) {
   return $player;
 }
 
-function getRandomInt(min, max) {
+function getRandomInt(max) {
   // создает рандомное число и возвращает его
-  min = Math.ceil(min);
+  let min = Math.ceil(0);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-function changeHp(player) {
-  // меняет полоску здоровья принимая рандомное число
-  const $playerLife = document.querySelector(
-    //обращаемся к уже созданному элементу с классом плаер + добавляем к нему свойство обьекта где есть номер игрока и к его синей полоске здоровья
-    ".player" + player.player + " .life"
-  );
+function renderHP() {
+  return (this.elHp().style.width = this.hp + "%");
+}
 
-  player.hp -= getRandomInt(1, 20); // обращение к свойству обьекта ХР - и изменение его на принятое число от 0 до 20
-  $playerLife.style.width = player.hp + "%"; //ширина синей полоски берется из количества ХП
-
-  if (player.hp <= 0) {
-    //условие, если ХП игрока становится 0 = то ширина полоски 0%
-    player.hp = 0;
-    $playerLife.style.width = 0 + "%";
-  }
+function elHp() {
+  return document.querySelector(".player" + this.player + " .life");
+  //обращаемся к уже созданному элементу с классом плаер + добавляем к нему свойство обьекта где есть номер игрока и к его синей полоске здоровья
 }
 
 function playerWin(name) {
   //принимает значение имени + создает див куда поместить надпись + создает надпись и помещает в див
-  const $winTitle = createElement("div", "loseTitle");
+  const $winTitle = createElement("div", "wonTitle");
   if (name) {
-    $winTitle.innerText = name + " win";
+    $winTitle.innerText = name + " wins";
     createReloadButton();
   } else {
     $winTitle.innerText = "drow";
@@ -95,8 +100,10 @@ function playerWin(name) {
 
 $randomBtn.addEventListener("click", function () {
   // событие на клик по кнопке РАНДОМ - вызывае  функцию измение ХП у переданного игрока
-  changeHp(player1);
-  changeHp(player2);
+  player1.changeHP(getRandomInt(20));
+  player2.changeHP(getRandomInt(20));
+  player1.renderHP();
+  player2.renderHP();
 
   if (player1.hp === 0 || player2.hp === 0) {
     // если ХП равно 0 у первого или второго игрока кнопка - отключается
