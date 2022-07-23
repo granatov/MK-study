@@ -9,9 +9,9 @@ const player1 = {
   attack: function (name) {
     console.log(this.name + " Fight...");
   },
-  changeHP: changeHP,
-  renderHP: renderHP,
-  elHp: elHp,
+  changeHP,
+  renderHP,
+  elHp,
 };
 const player2 = {
   player: 2,
@@ -22,9 +22,9 @@ const player2 = {
   attack: function () {
     console.log(this.name + " Fight...");
   },
-  changeHP: changeHP,
-  renderHP: renderHP,
-  elHp: elHp,
+  changeHP,
+  renderHP,
+  elHp,
 };
 
 function changeHP(damage) {
@@ -87,7 +87,7 @@ function elHp() {
 
 function playerWin(name) {
   //принимает значение имени + создает див куда поместить надпись + создает надпись и помещает в див
-  const $winTitle = createElement("div", "wonTitle");
+  const $winTitle = createElement("div", "loseTitle");
   if (name) {
     $winTitle.innerText = name + " wins";
     createReloadButton();
