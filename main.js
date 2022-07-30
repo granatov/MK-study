@@ -175,7 +175,7 @@ $formFight.addEventListener('submit', function (event) {
     }
     if (attack.hit === enemy.defence) {
       attack.value = 0;
-    } else if (enemy.hit === attack.defence) {
+    } if (enemy.hit === attack.defence) {
       enemy.value = 0;
     }
     item.checked = false;
