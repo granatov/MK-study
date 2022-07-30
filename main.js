@@ -72,8 +72,12 @@ function createPlayer2(obj) {
   return $player;
 }
 
+/**
+ * создает рандомное число и возвращает его
+ * @param {number} max
+ * @returns {number}
+ */
 function getRandomInt(max) {
-  // создает рандомное число и возвращает его
   let min = Math.ceil(0);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min)) + min;
@@ -83,13 +87,20 @@ function renderHP() {
   this.elHp().style.width = this.hp + '%';
 }
 
+/**
+ * обращаемся к уже созданному элементу с классом плаер + добавляем к нему свойство обьекта где есть номер игрока и к его синей полоске здоровья
+ * @returns {HTMLElement}
+ */
 function elHp() {
   return document.querySelector('.player' + this.player + ' .life');
-  //обращаемся к уже созданному элементу с классом плаер + добавляем к нему свойство обьекта где есть номер игрока и к его синей полоске здоровья
 }
 
+/**
+ *принимает значение имени + создает див куда поместить надпись + создает надпись и помещает в див
+ * @param {string} name
+ * @returns {string} winTitle
+ */
 function playerWin(name) {
-  //принимает значение имени + создает див куда поместить надпись + создает надпись и помещает в див
   const $winTitle = createElement('div', 'loseTitle');
   if (name) {
     $winTitle.innerText = name + ' wins';
@@ -150,7 +161,6 @@ function enemyAttack() {
 
 $formFight.addEventListener('submit', function (event) {
   event.preventDefault();
-  // console.dir($formFight);
   const enemy = enemyAttack();
 
   const attack = {};
@@ -159,16 +169,17 @@ $formFight.addEventListener('submit', function (event) {
     if (item.checked && item.name === 'hit') {
       attack.value = getRandomInt(HIT[item.value]);
       attack.hit = item.value;
-      if (attack.hit === enemy.defence) {
-        attack.value = 0;
-      }
     }
     if (item.checked && item.name === 'defence') {
       attack.defence = item.value;
     }
+    if (attack.hit === enemy.defence) {
+      attack.value = 0;
+    } else if (enemy.hit === attack.defence) {
+      enemy.value = 0;
+    }
     item.checked = false;
   }
-
 
   console.log(attack.value);
   console.log(attack.hit);
