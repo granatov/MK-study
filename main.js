@@ -21,6 +21,20 @@ const player2 = {
   elHp,
 };
 
+const $arenas = document.querySelector('.arenas');
+const $randomBtn = document.querySelector('.button');
+const $formFight = document.querySelector('.control');
+const HIT = {
+  head: 40,
+  body: 30,
+  foot: 20,
+};
+const ATTACK = ['head', 'body', 'foot'];
+
+/**
+ * отнимаем у обьекта ХП
+ * @param {number} damage
+ */
 function changeHP(damage) {
   this.hp -= damage;
   if (this.hp <= 0) {
@@ -28,20 +42,14 @@ function changeHP(damage) {
   }
 }
 
-const $arenas = document.querySelector('.arenas');
-const $randomBtn = document.querySelector('.button');
-const $formFight = document.querySelector('.control');
-
-const HIT = {
-  head: 40,
-  body: 30,
-  foot: 20,
-};
-
-const ATTACK = ['head', 'body', 'foot'];
-
+/**
+ *создает элемент с классом (принимает имя тега и имя класса) -
+ * @param {string} tagName
+ * @param {string} className
+ * @returns {HTMLElement}
+ */
 function createElement(tagName, className) {
-  //создает элемент с классом (принимает имя тега и имя класса) - возвращает тег
+  //
   const $tag = document.createElement(tagName);
   if (className) {
     $tag.classList.add(className);
@@ -49,8 +57,13 @@ function createElement(tagName, className) {
   return $tag;
 }
 
+/**
+ *создает игрока с его свойствами
+ * @param {object} obj
+ * @returns {HTMLElement}
+ */
 function createPlayer2(obj) {
-  // создает игрока с его свойствами
+  //
   const $player = createElement('div', 'player' + obj.player); //создаем часть экрана, где будет расположен игрок и здоровье
   const $character = createElement('div', 'character'); //создаем див, где будет картинка игрока
   const $img = createElement('img'); //создаем тег для изображения
@@ -83,6 +96,9 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
+/**
+ * отрисовывает полоску жизни у игрока
+ */
 function renderHP() {
   this.elHp().style.width = this.hp + '%';
 }
@@ -138,6 +154,9 @@ function playerWin(name) {
 //   }
 // });
 
+/**
+ * создает кнопку сброса и создает событие клика на нее перезагружающая страницу
+ */
 function createReloadButton() {
   const $reloadWrap = createElement('div', 'reloadWrap');
   const $reloadBtn = createElement('button', 'button');
@@ -149,6 +168,10 @@ function createReloadButton() {
   });
 }
 
+/**
+ * создает обьект с параметрами атаки врага
+ * @returns {object}
+ */
 function enemyAttack() {
   const hit = ATTACK[getRandomInt(3)];
   const defence = ATTACK[getRandomInt(3)];
@@ -159,12 +182,12 @@ function enemyAttack() {
   };
 }
 
-$formFight.addEventListener('submit', function (event) {
-  event.preventDefault();
-  const enemy = enemyAttack();
-
+/**
+ * создает обьект с параметрами атаки игрока1
+ * @returns {object}
+ */
+function playerAttack() {
   const attack = {};
-
   for (let item of $formFight) {
     if (item.checked && item.name === 'hit') {
       attack.value = getRandomInt(HIT[item.value]);
@@ -173,23 +196,15 @@ $formFight.addEventListener('submit', function (event) {
     if (item.checked && item.name === 'defence') {
       attack.defence = item.value;
     }
-    if (attack.hit === enemy.defence) {
-      attack.value = 0;
-    } if (enemy.hit === attack.defence) {
-      enemy.value = 0;
-    }
     item.checked = false;
   }
+  return attack;
+}
 
-  console.log(attack.value);
-  console.log(attack.hit);
-  console.log(attack.defence);
-  console.log(enemy.value);
-  console.log(enemy.hit);
-  console.log(enemy.defence);
-
-  // событие на клик по кнопке РАНДОМ - вызывае  функцию измение ХП у переданного игрока
-
+/**
+ * выводит на экнан результаты боя и деактивизирует кнопку fight
+ */
+function showResult() {
   if (player1.hp === 0 || player2.hp === 0) {
     // если ХП равно 0 у первого или второго игрока кнопка - отключается
     $randomBtn.disabled = true;
@@ -207,11 +222,23 @@ $formFight.addEventListener('submit', function (event) {
     //если у обоих игроков ХП = 0 =
     $arenas.appendChild(playerWin()); //то вызывается функция без передачи параметра (ничья)
   }
+}
 
-  player1.changeHP(attack.value);
-  player2.changeHP(enemy.value);
-  player1.renderHP();
-  player2.renderHP();
+$formFight.addEventListener('submit', function (event) {
+  event.preventDefault();
+  const enemy = enemyAttack();
+  const player = playerAttack();
+
+  if (player.defence !== enemy.hit) {
+    player1.changeHP(enemy.value);
+    player1.renderHP();
+  }
+  if (enemy.defence !== player.hit) {
+    player2.changeHP(player.value);
+    player2.renderHP();
+  }
+  // событие на клик по кнопке РАНДОМ - вызывае  функцию измение ХП у переданного игрока
+  showResult();
 });
 
 $arenas.appendChild(createPlayer2(player1));
