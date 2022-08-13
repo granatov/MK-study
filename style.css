@@ -1,11 +1,11 @@
 @font-face {
-  font-family: "Mortal Kombat 3";
-  src: url("./assets/fonts/MortalKombat3-Regular.eot");
-  src: url("./assets/fonts/MortalKombat3-Regular.eot?#iefix")
-      format("embedded-opentype"),
-    url("./assets/fonts/MortalKombat3-Regular.woff2") format("woff2"),
-    url("./assets/fonts/MortalKombat3-Regular.woff") format("woff"),
-    url("./assets/fonts/MortalKombat3-Regular.ttf") format("truetype");
+  font-family: 'Mortal Kombat 3';
+  src: url('./assets/fonts/MortalKombat3-Regular.eot');
+  src: url('./assets/fonts/MortalKombat3-Regular.eot?#iefix')
+      format('embedded-opentype'),
+    url('./assets/fonts/MortalKombat3-Regular.woff2') format('woff2'),
+    url('./assets/fonts/MortalKombat3-Regular.woff') format('woff'),
+    url('./assets/fonts/MortalKombat3-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -152,7 +152,7 @@ body {
 
 .name {
   position: absolute;
-  font-family: "Mortal Kombat 3";
+  font-family: 'Mortal Kombat 3';
   font-size: 26px;
   line-height: 20px;
   letter-spacing: 2px;
@@ -176,6 +176,10 @@ body {
   background-size: cover;
   background-position: center;
   border-top: 4px solid #f5d100;
+  padding: 6px 40px;
+  overflow: scroll;
+  color: white;
+  font-family: Arial;
 }
 
 .character {
@@ -194,13 +198,15 @@ body {
 }
 
 .player2 .character img {
-  transform: scaleX(-1);
+  transform: scaleX(-1) translate(50%, 0);
 }
 
 .character img {
   height: 100%;
   position: absolute;
   bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
 }
 
 .fight {
@@ -232,11 +238,11 @@ body {
   border-radius: 4px;
   box-sizing: border-box;
   cursor: pointer;
-  font-family: "Mortal Kombat 3";
+  font-family: 'Mortal Kombat 3';
   outline: none;
 }
 .button::after {
-  content: "";
+  content: '';
   position: absolute;
   width: 100%;
   height: 100%;
@@ -282,7 +288,7 @@ body {
   text-transform: uppercase;
   z-index: 1000;
   color: white;
-  font-family: "Mortal Kombat 3";
+  font-family: 'Mortal Kombat 3';
   text-shadow: 2px 2px 2px #cd0e03;
 }
 
@@ -298,20 +304,20 @@ body {
   margin-top: 0;
 }
 
-form:invalid button[class="button"] {
+form:invalid button[class='button'] {
   opacity: 0.9;
   cursor: not-allowed;
 }
 
-form:invalid button[class="button"]:after {
+form:invalid button[class='button']:after {
   opacity: 0.1;
 }
 
-form:invalid button[class="button"]:active {
+form:invalid button[class='button']:active {
   top: 0px;
 }
 
-form:invalid button[class="button"]:active::after {
+form:invalid button[class='button']:active::after {
   top: 4px;
 }
 
@@ -342,7 +348,7 @@ form:invalid button[class="button"]:active::after {
   text-align: center;
   margin: 0 auto 20px;
   font-weight: 700;
-  font-family: "Mortal Kombat 3";
+  font-family: 'Mortal Kombat 3';
   color: #efefef;
   text-transform: uppercase;
 }
@@ -351,7 +357,7 @@ form:invalid button[class="button"]:active::after {
   border: solid 3px #cd0e03;
   height: 50px;
   padding: 0 12px;
-  font-family: "Mortal Kombat 3";
+  font-family: 'Mortal Kombat 3';
   display: flex;
   justify-content: space-between;
   color: #efefef;
@@ -377,8 +383,8 @@ form:invalid button[class="button"]:active::after {
   display: block;
   width: 80px;
   height: 50px;
-  content: "";
-  transform: scaleY(1);
+  content: '';
+  transform: scaleY(1.2);
   z-index: -1;
   margin-bottom: -50px;
   transition: 0.3s;
@@ -390,15 +396,15 @@ form:invalid button[class="button"]:active::after {
 input {
   display: none;
 }
-input[type="radio"]:checked + label > span {
+input[type='radio']:checked + label > span {
   color: #fff;
   font-weight: 700;
   text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
 }
-input[type="radio"]:checked + label > span::before {
+input[type='radio']:checked + label > span::before {
   background: #f5d100;
   box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.2);
 }
-input[type="radio"]:checked + label > span:hover {
+input[type='radio']:checked + label > span:hover {
   background: none;
 }
