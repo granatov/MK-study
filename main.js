@@ -63,12 +63,28 @@ const logs = {
 const $arenas = document.querySelector('.arenas');
 const $randomBtn = document.querySelector('.button');
 const $formFight = document.querySelector('.control');
+const $chat = document.querySelector('.chat');
 const HIT = {
   head: 40,
   body: 30,
   foot: 20,
 };
 const ATTACK = ['head', 'body', 'foot'];
+
+// const date = new Date();
+// const hours = date.getHours();
+
+// $chat.insertAdjacentElement('afterbegin', hours);
+
+// function showDate() {
+//   const date = new Date();
+//   const hours = date.getHours();
+//   const minutes = date.getMinutes();
+//   const seconds = date.getSeconds();
+//   const starTime = `<p>${hours()}:${minutes()}:${seconds()}</p>`;
+//   $chat.insertAdjacentElement('afterbegin', starTime);
+// }
+// showDate();
 
 /**
  * отнимаем у обьекта ХП
@@ -163,35 +179,10 @@ function playerWin(name) {
   } else {
     $winTitle.innerText = 'drow';
     createReloadButton();
+    generateLogs('draw', player1, player2);
   }
   return $winTitle;
 }
-
-// $randomBtn.addEventListener("click", function () {
-//   // событие на клик по кнопке РАНДОМ - вызывае  функцию измение ХП у переданного игрока
-//   player1.changeHP(getRandomInt(20));
-//   player2.changeHP(getRandomInt(20));
-//   player1.renderHP();
-//   player2.renderHP();
-
-//   if (player1.hp === 0 || player2.hp === 0) {
-//     // если ХП равно 0 у первого или второго игрока кнопка - отключается
-//     $randomBtn.disabled = true;
-//     $randomBtn.style.opacity = "0";
-//     $randomBtn.style.cursor = "default";
-//   }
-
-//   if (player1.hp <= 0 && player1.hp < player2.hp) {
-//     //если игрок1 имеет 0 ХП и его ХП меньше чем у игрока2
-//     $arenas.appendChild(playerWin(player2.name)); // то имя победителя обьявляется игрока2
-//   } else if (player2.hp <= 0 && player2.hp < player1.hp) {
-//     //если игрок2 имеет 0 ХП и его ХП меньше чем у игрока1
-//     $arenas.appendChild(playerWin(player1.name)); // то имя победителя обьявляется игрока1
-//   } else if (player1.hp == 0 && player2.hp == 0) {
-//     //если у обоих игроков ХП = 0 =
-//     $arenas.appendChild(playerWin()); //то вызывается функция без передачи параметра (ничья)
-//   }
-// });
 
 /**
  * создает кнопку сброса и создает событие клика на нее перезагружающая страницу
@@ -241,14 +232,50 @@ function playerAttack() {
 }
 
 /**
- * выводит на экнан результаты боя и деактивизирует кнопку fight
+ *генерирует логи боя подставляя имена игроков в текст
+ * @param {string} type
+ * @param {object} player1
+ * @param {object} player2
+ */
+function generateLogs(type, player1, player2) {
+  let text;
+  switch (type) {
+    case 'hit':
+      text = logs['hit'][getRandomInt(logs.hit.length)]
+        .replace('[playerKick]', player1.name)
+        .replace('[playerDefence]', player2.name);
+      break;
+    case 'end':
+      text = logs['end'][getRandomInt(logs.end.length)]
+        .replace('[playerWins]', player1.name)
+        .replace('[playerLose]', player2.name);
+      break;
+    case 'defence':
+      text = logs['defence'][getRandomInt(logs.defence.length)]
+        .replace('[playerKick]', player1.name)
+        .replace('[playerDefence]', player2.name);
+      break;
+    case 'draw':
+      text = logs['draw'];
+      break;
+    case 'start':
+      text = logs['start'][getRandomInt(logs.start.length)]
+        .replace('[player1]', player1.name)
+        .replace('[player2]', player2.name);
+      break;
+  }
+  const el = `<p>${text}</p>`;
+  $chat.insertAdjacentHTML('afterbegin', el);
+}
+
+/**
+ * выводит на экнан результаты боя и деактивизирует форму управления боем
  */
 function showResult() {
   if (player1.hp === 0 || player2.hp === 0) {
-    // если ХП равно 0 у первого или второго игрока кнопка - отключается
-    $randomBtn.disabled = true;
-    $randomBtn.style.opacity = '0';
-    $randomBtn.style.cursor = 'default';
+    // если ХП равно 0 у первого или второго игрока элементы управления боем  - отключаются
+    $formFight.style.display = 'none';
+    $randomBtn.style.display = 'none';
   }
 
   if (player1.hp <= 0 && player1.hp < player2.hp) {
@@ -267,14 +294,23 @@ $formFight.addEventListener('submit', function (event) {
   event.preventDefault();
   const enemy = enemyAttack();
   const player = playerAttack();
+  // generateLogs('start', player1, player2);
 
   if (player.defence !== enemy.hit) {
     player1.changeHP(enemy.value);
     player1.renderHP();
+    generateLogs('hit', player2, player1);
   }
   if (enemy.defence !== player.hit) {
     player2.changeHP(player.value);
     player2.renderHP();
+    generateLogs('hit', player1, player2);
+  }
+  if (player.defence === enemy.hit) {
+    generateLogs('defence', player2, player1);
+  }
+  if (enemy.defence === player.hit) {
+    generateLogs('defence', player1, player2);
   }
 
   showResult();
