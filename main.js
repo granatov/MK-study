@@ -4,7 +4,7 @@ const player1 = {
   player: 1,
   name: 'Scorpion',
   hp: 100,
-  img: 'https://64.media.tumblr.com/f0bd4e780fe86557675903070dffa2a3/tumblr_mhqa0bHAC31s0pq6co1_250.gifv',
+  img: '/assets/scorpion.webp',
   weapon: ['knife', 'sword'],
   changeHP,
   renderHP,
@@ -14,7 +14,7 @@ const player2 = {
   player: 2,
   name: 'Subzero',
   hp: 100,
-  img: 'https://i.playground.ru/p/KzmZYZUkcr_c0FDkSC8hVQ.gif',
+  img: '/assets/subzero.gif',
   weapon: ['gun', 'fireball'],
   changeHP,
   renderHP,
@@ -259,7 +259,6 @@ function generateLogs(type, player1, player2) {
         .replace('[time]', timer)
         .replace('[player1]', player1.name)
         .replace('[player2]', player2.name);
-
       break;
   }
 
