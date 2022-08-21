@@ -4,7 +4,7 @@ const player1 = {
   player: 1,
   name: 'Scorpion',
   hp: 100,
-  img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
+  img: '/assets/scorpion.webp',
   weapon: ['knife', 'sword'],
   changeHP,
   renderHP,
@@ -14,7 +14,7 @@ const player2 = {
   player: 2,
   name: 'Subzero',
   hp: 100,
-  img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
+  img: '/assets/subzero.gif',
   weapon: ['gun', 'fireball'],
   changeHP,
   renderHP,
@@ -70,21 +70,6 @@ const HIT = {
   foot: 20,
 };
 const ATTACK = ['head', 'body', 'foot'];
-
-// const date = new Date();
-// const hours = date.getHours();
-
-// $chat.insertAdjacentElement('afterbegin', hours);
-
-// function showDate() {
-//   const date = new Date();
-//   const hours = date.getHours();
-//   const minutes = date.getMinutes();
-//   const seconds = date.getSeconds();
-//   const starTime = `<p>${hours()}:${minutes()}:${seconds()}</p>`;
-//   $chat.insertAdjacentElement('afterbegin', starTime);
-// }
-// showDate();
 
 /**
  * отнимаем у обьекта ХП
@@ -239,31 +224,44 @@ function playerAttack() {
  */
 function generateLogs(type, player1, player2) {
   let text;
+  let timer = new Date().toLocaleTimeString();
+
   switch (type) {
     case 'hit':
-      text = logs['hit'][getRandomInt(logs.hit.length)]
-        .replace('[playerKick]', player1.name)
-        .replace('[playerDefence]', player2.name);
+      text =
+        timer +
+        ' - ' +
+        logs['hit'][getRandomInt(logs.hit.length)]
+          .replace('[playerKick]', player1.name)
+          .replace('[playerDefence]', player2.name);
       break;
     case 'end':
-      text = logs['end'][getRandomInt(logs.end.length)]
-        .replace('[playerWins]', player1.name)
-        .replace('[playerLose]', player2.name);
+      text =
+        timer +
+        ' - ' +
+        logs['end'][getRandomInt(logs.end.length)]
+          .replace('[playerWins]', player1.name)
+          .replace('[playerLose]', player2.name);
       break;
     case 'defence':
-      text = logs['defence'][getRandomInt(logs.defence.length)]
-        .replace('[playerKick]', player1.name)
-        .replace('[playerDefence]', player2.name);
+      text =
+        timer +
+        ' - ' +
+        logs['defence'][getRandomInt(logs.defence.length)]
+          .replace('[playerKick]', player1.name)
+          .replace('[playerDefence]', player2.name);
       break;
     case 'draw':
-      text = logs['draw'];
+      text = timer + '- ' + logs['draw'];
       break;
     case 'start':
-      text = logs['start'][getRandomInt(logs.start.length)]
+      text = logs['start']
+        .replace('[time]', timer)
         .replace('[player1]', player1.name)
         .replace('[player2]', player2.name);
       break;
   }
+
   const el = `<p>${text}</p>`;
   $chat.insertAdjacentHTML('afterbegin', el);
 }
@@ -281,12 +279,15 @@ function showResult() {
   if (player1.hp <= 0 && player1.hp < player2.hp) {
     //если игрок1 имеет 0 ХП и его ХП меньше чем у игрока2
     $arenas.appendChild(playerWin(player2.name)); // то имя победителя обьявляется игрока2
+    generateLogs('end', player2, player1); //генерирует лог о результатах боя
   } else if (player2.hp <= 0 && player2.hp < player1.hp) {
     //если игрок2 имеет 0 ХП и его ХП меньше чем у игрока1
     $arenas.appendChild(playerWin(player1.name)); // то имя победителя обьявляется игрока1
+    generateLogs('end', player1, player2); //генерирует лог о результатах боя
   } else if (player1.hp == 0 && player2.hp == 0) {
-    //если у обоих игроков ХП = 0 =
+    //если у обоих игроков ХП =  по 0 =
     $arenas.appendChild(playerWin()); //то вызывается функция без передачи параметра (ничья)
+    generateLogs('draw'); //генерирует лог о результатах боя ничья
   }
 }
 
@@ -294,7 +295,6 @@ $formFight.addEventListener('submit', function (event) {
   event.preventDefault();
   const enemy = enemyAttack();
   const player = playerAttack();
-  // generateLogs('start', player1, player2);
 
   if (player.defence !== enemy.hit) {
     player1.changeHP(enemy.value);
@@ -312,9 +312,9 @@ $formFight.addEventListener('submit', function (event) {
   if (enemy.defence === player.hit) {
     generateLogs('defence', player1, player2);
   }
-
   showResult();
 });
 
 $arenas.appendChild(createPlayer2(player1));
 $arenas.appendChild(createPlayer2(player2));
+generateLogs('start', player1, player2);
