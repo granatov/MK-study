@@ -217,7 +217,7 @@ function playerAttack() {
 }
 
 /**
- *генерирует логи боя подставляя имена игроков в текст
+ *генерирует логи боя подставляя имена игроков в текст добавляя точное время и количество ХП у игрока после удара
  * @param {string} type
  * @param {object} player1
  * @param {object} player2
@@ -233,7 +233,10 @@ function generateLogs(type, player1, player2) {
         ' - ' +
         logs['hit'][getRandomInt(logs.hit.length)]
           .replace('[playerKick]', player1.name)
-          .replace('[playerDefence]', player2.name);
+          .replace('[playerDefence]', player2.name) +
+        ' [' +
+        player2.hp +
+        '/100]';
       break;
     case 'end':
       text =
@@ -249,7 +252,10 @@ function generateLogs(type, player1, player2) {
         ' - ' +
         logs['defence'][getRandomInt(logs.defence.length)]
           .replace('[playerKick]', player1.name)
-          .replace('[playerDefence]', player2.name);
+          .replace('[playerDefence]', player2.name) +
+        ' [' +
+        player2.hp +
+        '/100]';
       break;
     case 'draw':
       text = timer + '- ' + logs['draw'];
